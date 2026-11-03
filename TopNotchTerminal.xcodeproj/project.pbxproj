@@ -1,0 +1,1024 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0E19EE83FB08C56132AF8F71 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BC2ACC9E0C9B5AAE0878806 /* background.png */; };
+		0E6ABD3C502A102BEACDF892 /* IPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789E0AB323279E44F99EBEB0 /* IPC.swift */; };
+		14A76FBC70F7924C50CBA1A5 /* IPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789E0AB323279E44F99EBEB0 /* IPC.swift */; };
+		16AB6EDA03F0FECB5EAD7F6F /* TerminalSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054A0D97A74AB41E3B591CEF /* TerminalSession.swift */; };
+		1F6A39E35034270E0B8EAE08 /* CommandServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF994ACA76D8D3B744F67FF8 /* CommandServer.swift */; };
+		2D16DD192D443A4FD1632521 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17F9323B1028FF4473748EB0 /* Assets.xcassets */; };
+		4FA6709E7F3751BC3445780A /* kick in Resources */ = {isa = PBXBuildFile; fileRef = C5C92F397F779C05597B1211 /* kick */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		54AFA3D29C015A86BF2C7864 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B77D1554409ADBA133ED19 /* SettingsView.swift */; };
+		54CB9724CDE1174F753E29E1 /* tnt-shell in Resources */ = {isa = PBXBuildFile; fileRef = 7D9C2197CB40CE744AE5CC6D /* tnt-shell */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		59F6C90D5A90106AC49BCAE4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE4B32F801BD0C0009D358C /* main.swift */; };
+		6F34C463E87C0EA4EFDAD453 /* NotchGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920D55117A4360852A3CF617 /* NotchGeometry.swift */; };
+		707CDFD7A675B2B0B6AACE1C /* TabRailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9DB6DB3B28CDF3917F579FD /* TabRailView.swift */; };
+		7E41C83EF462A85262BB1685 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 765C47B5996C96EBB9C578CC /* AppIcon.icns */; };
+		7FCA29019A4E53ABCDD4EFA1 /* TopNotchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9762146F9CDF78E88C588BA6 /* TopNotchApp.swift */; };
+		8025D4390F469F3E9461F3AA /* Motion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44F6A7BBB832FA35F290F40 /* Motion.swift */; };
+		92E7F8F8B0B4C4D785072366 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E752070E97AB9F53D0492B /* AppDelegate.swift */; };
+		A90C8AF7A2E5D5E81201E20B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CB38456B0672DFBCCCFB9F /* main.swift */; };
+		B49BEB956610F9BA6F7287D2 /* WorkspaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1214C828ACD2392CDD13112D /* WorkspaceView.swift */; };
+		BEDE2B8CC43AB7D6689403A4 /* NotchPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BCE3FAEA08C889F03C1C7 /* NotchPanelController.swift */; };
+		BFAE688E73B3B9ED2BFFD340 /* CocoaFieldKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 111E179B203A5E0622074591 /* CocoaFieldKeys.swift */; };
+		CB1D3839EEC0511F94819750 /* GlassIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A63B5D61F16CF2D1EC6578 /* GlassIconButton.swift */; };
+		D0E3E5481E5D29257FF9926F /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = 9B0864B5F6F58A79A976193C /* SwiftTerm */; };
+		D17D7E2554549A996E2CFB78 /* focus in Resources */ = {isa = PBXBuildFile; fileRef = 1C784B404D663EDD396B0EBD /* focus */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D49D32E6B3F674934E55389D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCE39E3DEF55701232296D0 /* AppSettings.swift */; };
+		D51AE2AB7F890D62378E76B7 /* IPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789E0AB323279E44F99EBEB0 /* IPC.swift */; };
+		D8C13226F590E5209B3FB689 /* IPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789E0AB323279E44F99EBEB0 /* IPC.swift */; };
+		D9A22FDA12D997097AD4D9E8 /* DetachedTerminalWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830D44C965ECDF7D38F9F60F /* DetachedTerminalWindow.swift */; };
+		DF8D3B4E401B9148159DE659 /* KeyboardSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA3A58FB2298FFC6F347F777 /* KeyboardSelection.swift */; };
+		E6BB7425813AEDA581C34176 /* OverlayToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951D226F799634073556D183 /* OverlayToolbar.swift */; };
+		EA25FACDFDC336B955F9EDC2 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFD9A4DAEB110C89A5353BB /* main.swift */; };
+		F0FAE258D66351E2C3F1C8B1 /* SurfaceRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1559BA98F5BFFA226E87B0 /* SurfaceRouter.swift */; };
+		F91AE97C3BCEC472AD4D59E9 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9980E5970EB7141BBFF1A1 /* SessionStore.swift */; };
+		FEA963B4D6128CC3ED5521DC /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 19F7306CCF468DBA78A1CAAA /* main.c */; };
+		FF220086C8E666A1334495ED /* kickback in Resources */ = {isa = PBXBuildFile; fileRef = 390AE497D80802CE4596B0DD /* kickback */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2449FF57724370854B48CF62 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A86A957C92037ED37191B3C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A174B38380A1E6DB72A70077;
+			remoteInfo = focus;
+		};
+		25AF335E09C667E14951B52E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A86A957C92037ED37191B3C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C652E1ABFF3016A49495B66A;
+			remoteInfo = kick;
+		};
+		40CD72AEF6D795704618D826 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A86A957C92037ED37191B3C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D078BBFD64E4E461D75ECDAE;
+			remoteInfo = kickback;
+		};
+		BC78EBCD9C0E59FCC56C0762 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A86A957C92037ED37191B3C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 748D3E30F46A7D274E90A597;
+			remoteInfo = "tnt-shell";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		054A0D97A74AB41E3B591CEF /* TerminalSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalSession.swift; sourceTree = "<group>"; };
+		111E179B203A5E0622074591 /* CocoaFieldKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocoaFieldKeys.swift; sourceTree = "<group>"; };
+		1214C828ACD2392CDD13112D /* WorkspaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceView.swift; sourceTree = "<group>"; };
+		16A13F45762DC8F0744CB45A /* zprofile */ = {isa = PBXFileReference; path = zprofile; sourceTree = "<group>"; };
+		17F9323B1028FF4473748EB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		19E752070E97AB9F53D0492B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		19F7306CCF468DBA78A1CAAA /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		1BE4B32F801BD0C0009D358C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		1C784B404D663EDD396B0EBD /* focus */ = {isa = PBXFileReference; includeInIndex = 0; path = focus; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CCE39E3DEF55701232296D0 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		1E4F1E3DC920B460874DE591 /* zshrc */ = {isa = PBXFileReference; path = zshrc; sourceTree = "<group>"; };
+		1F1BCE3FAEA08C889F03C1C7 /* NotchPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchPanelController.swift; sourceTree = "<group>"; };
+		2BC2ACC9E0C9B5AAE0878806 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
+		390AE497D80802CE4596B0DD /* kickback */ = {isa = PBXFileReference; includeInIndex = 0; path = kickback; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BFD9A4DAEB110C89A5353BB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		62CB38456B0672DFBCCCFB9F /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		742EBFA2E5B334C2DD72DA28 /* TopNotchTerminal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TopNotchTerminal.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		765C47B5996C96EBB9C578CC /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
+		789E0AB323279E44F99EBEB0 /* IPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPC.swift; sourceTree = "<group>"; };
+		7D9C2197CB40CE744AE5CC6D /* tnt-shell */ = {isa = PBXFileReference; includeInIndex = 0; path = "tnt-shell"; sourceTree = BUILT_PRODUCTS_DIR; };
+		830D44C965ECDF7D38F9F60F /* DetachedTerminalWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetachedTerminalWindow.swift; sourceTree = "<group>"; };
+		8F9980E5970EB7141BBFF1A1 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
+		920D55117A4360852A3CF617 /* NotchGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchGeometry.swift; sourceTree = "<group>"; };
+		951D226F799634073556D183 /* OverlayToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayToolbar.swift; sourceTree = "<group>"; };
+		9762146F9CDF78E88C588BA6 /* TopNotchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNotchApp.swift; sourceTree = "<group>"; };
+		AB0D22D21001287D0DD3872E /* zshenv */ = {isa = PBXFileReference; path = zshenv; sourceTree = "<group>"; };
+		B5A63B5D61F16CF2D1EC6578 /* GlassIconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassIconButton.swift; sourceTree = "<group>"; };
+		C5C92F397F779C05597B1211 /* kick */ = {isa = PBXFileReference; includeInIndex = 0; path = kick; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1628CD006DFFFF0FBC9CA13 /* zlogin */ = {isa = PBXFileReference; path = zlogin; sourceTree = "<group>"; };
+		D44F6A7BBB832FA35F290F40 /* Motion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
+		D4B77D1554409ADBA133ED19 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		DA3A58FB2298FFC6F347F777 /* KeyboardSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardSelection.swift; sourceTree = "<group>"; };
+		EA1559BA98F5BFFA226E87B0 /* SurfaceRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurfaceRouter.swift; sourceTree = "<group>"; };
+		F9DB6DB3B28CDF3917F579FD /* TabRailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabRailView.swift; sourceTree = "<group>"; };
+		FF994ACA76D8D3B744F67FF8 /* CommandServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandServer.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F6A74CE8B354E3E8F56463A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0E3E5481E5D29257FF9926F /* SwiftTerm in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		04A0B3E003AD2B2D596A890D /* Window */ = {
+			isa = PBXGroup;
+			children = (
+				830D44C965ECDF7D38F9F60F /* DetachedTerminalWindow.swift */,
+			);
+			path = Window;
+			sourceTree = "<group>";
+		};
+		0C0BE22275B94B2E9DA5B501 /* kickback */ = {
+			isa = PBXGroup;
+			children = (
+				1BE4B32F801BD0C0009D358C /* main.swift */,
+			);
+			path = kickback;
+			sourceTree = "<group>";
+		};
+		18212D01F14F878E4F4CD732 = {
+			isa = PBXGroup;
+			children = (
+				38351542694C27DBDB113880 /* Resources */,
+				6125CA582C54D78671F4E111 /* Sources */,
+				8E5900E3D081D391ECE21D48 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		38351542694C27DBDB113880 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A6EAA299294416DCE0D9CF34 /* dmg */,
+				671FE9C1DB57D2F4130AB4AE /* zsh */,
+				765C47B5996C96EBB9C578CC /* AppIcon.icns */,
+				17F9323B1028FF4473748EB0 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		3BDC5D6E3CF9D22747237494 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				D4B77D1554409ADBA133ED19 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		4212B6C23A8A6077F0B3CD9A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				19E752070E97AB9F53D0492B /* AppDelegate.swift */,
+				1CCE39E3DEF55701232296D0 /* AppSettings.swift */,
+				9762146F9CDF78E88C588BA6 /* TopNotchApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		55724FDE80C32C1D8AD323E2 /* Surface */ = {
+			isa = PBXGroup;
+			children = (
+				B5A63B5D61F16CF2D1EC6578 /* GlassIconButton.swift */,
+				951D226F799634073556D183 /* OverlayToolbar.swift */,
+				EA1559BA98F5BFFA226E87B0 /* SurfaceRouter.swift */,
+				F9DB6DB3B28CDF3917F579FD /* TabRailView.swift */,
+				1214C828ACD2392CDD13112D /* WorkspaceView.swift */,
+			);
+			path = Surface;
+			sourceTree = "<group>";
+		};
+		6125CA582C54D78671F4E111 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				4212B6C23A8A6077F0B3CD9A /* App */,
+				818E4ACF73A4CAD5F8174EB4 /* Helpers */,
+				AD427F981C7F12AC16BA4D17 /* IPC */,
+				E7763B6FA85F99DE5830E149 /* Notch */,
+				E04F5450942CA987E474A2CD /* Session */,
+				3BDC5D6E3CF9D22747237494 /* Settings */,
+				55724FDE80C32C1D8AD323E2 /* Surface */,
+				04A0B3E003AD2B2D596A890D /* Window */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		671FE9C1DB57D2F4130AB4AE /* zsh */ = {
+			isa = PBXGroup;
+			children = (
+				D1628CD006DFFFF0FBC9CA13 /* zlogin */,
+				16A13F45762DC8F0744CB45A /* zprofile */,
+				AB0D22D21001287D0DD3872E /* zshenv */,
+				1E4F1E3DC920B460874DE591 /* zshrc */,
+			);
+			path = zsh;
+			sourceTree = "<group>";
+		};
+		818E4ACF73A4CAD5F8174EB4 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				BC7B947CDD78DEAED28446C3 /* focus */,
+				F01AD74D04096F58EB38DFBE /* kick */,
+				0C0BE22275B94B2E9DA5B501 /* kickback */,
+				DAF4D1A5CFF80A5C96957E88 /* tnt-shell */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		8E5900E3D081D391ECE21D48 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C784B404D663EDD396B0EBD /* focus */,
+				C5C92F397F779C05597B1211 /* kick */,
+				390AE497D80802CE4596B0DD /* kickback */,
+				7D9C2197CB40CE744AE5CC6D /* tnt-shell */,
+				742EBFA2E5B334C2DD72DA28 /* TopNotchTerminal.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A6EAA299294416DCE0D9CF34 /* dmg */ = {
+			isa = PBXGroup;
+			children = (
+				2BC2ACC9E0C9B5AAE0878806 /* background.png */,
+			);
+			path = dmg;
+			sourceTree = "<group>";
+		};
+		AD427F981C7F12AC16BA4D17 /* IPC */ = {
+			isa = PBXGroup;
+			children = (
+				FF994ACA76D8D3B744F67FF8 /* CommandServer.swift */,
+				789E0AB323279E44F99EBEB0 /* IPC.swift */,
+			);
+			path = IPC;
+			sourceTree = "<group>";
+		};
+		BC7B947CDD78DEAED28446C3 /* focus */ = {
+			isa = PBXGroup;
+			children = (
+				62CB38456B0672DFBCCCFB9F /* main.swift */,
+			);
+			path = focus;
+			sourceTree = "<group>";
+		};
+		DAF4D1A5CFF80A5C96957E88 /* tnt-shell */ = {
+			isa = PBXGroup;
+			children = (
+				19F7306CCF468DBA78A1CAAA /* main.c */,
+			);
+			path = "tnt-shell";
+			sourceTree = "<group>";
+		};
+		E04F5450942CA987E474A2CD /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				111E179B203A5E0622074591 /* CocoaFieldKeys.swift */,
+				DA3A58FB2298FFC6F347F777 /* KeyboardSelection.swift */,
+				8F9980E5970EB7141BBFF1A1 /* SessionStore.swift */,
+				054A0D97A74AB41E3B591CEF /* TerminalSession.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		E7763B6FA85F99DE5830E149 /* Notch */ = {
+			isa = PBXGroup;
+			children = (
+				D44F6A7BBB832FA35F290F40 /* Motion.swift */,
+				920D55117A4360852A3CF617 /* NotchGeometry.swift */,
+				1F1BCE3FAEA08C889F03C1C7 /* NotchPanelController.swift */,
+			);
+			path = Notch;
+			sourceTree = "<group>";
+		};
+		F01AD74D04096F58EB38DFBE /* kick */ = {
+			isa = PBXGroup;
+			children = (
+				4BFD9A4DAEB110C89A5353BB /* main.swift */,
+			);
+			path = kick;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		748D3E30F46A7D274E90A597 /* tnt-shell */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EED3EA6D3EC56EDBAC4A74E5 /* Build configuration list for PBXNativeTarget "tnt-shell" */;
+			buildPhases = (
+				3ACFB68B003190D225E449A5 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "tnt-shell";
+			packageProductDependencies = (
+			);
+			productName = "tnt-shell";
+			productReference = 7D9C2197CB40CE744AE5CC6D /* tnt-shell */;
+			productType = "com.apple.product-type.tool";
+		};
+		A174B38380A1E6DB72A70077 /* focus */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2539E0A25ED12B93731225A8 /* Build configuration list for PBXNativeTarget "focus" */;
+			buildPhases = (
+				84A7716BF3EE5A3A8DB4262F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = focus;
+			packageProductDependencies = (
+			);
+			productName = focus;
+			productReference = 1C784B404D663EDD396B0EBD /* focus */;
+			productType = "com.apple.product-type.tool";
+		};
+		C652E1ABFF3016A49495B66A /* kick */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 26CEBFDA8F4465EAED178931 /* Build configuration list for PBXNativeTarget "kick" */;
+			buildPhases = (
+				F5AB183B24E73D3ADB802E28 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = kick;
+			packageProductDependencies = (
+			);
+			productName = kick;
+			productReference = C5C92F397F779C05597B1211 /* kick */;
+			productType = "com.apple.product-type.tool";
+		};
+		C9F7EC810985D71FFF65D632 /* TopNotchTerminal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C3E8526A8D2ED0B7EC936E0 /* Build configuration list for PBXNativeTarget "TopNotchTerminal" */;
+			buildPhases = (
+				6985F53FC76EA21250743551 /* Sources */,
+				135787B8E69B5A9CEF1E0ACD /* Resources */,
+				F6A74CE8B354E3E8F56463A4 /* Frameworks */,
+				6F9C7297339C61424179C85C /* Copy kick helpers */,
+				CD2958146FC8596E9D7629D8 /* Install complete app icon */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BA4B0204531950A74C6DE822 /* PBXTargetDependency */,
+				FC1A4203E5007383A8770764 /* PBXTargetDependency */,
+				4CC9932E2206F0BDAB75B1F8 /* PBXTargetDependency */,
+				9B2B86C5C58F738F7365FBAA /* PBXTargetDependency */,
+			);
+			name = TopNotchTerminal;
+			packageProductDependencies = (
+				9B0864B5F6F58A79A976193C /* SwiftTerm */,
+			);
+			productName = TopNotchTerminal;
+			productReference = 742EBFA2E5B334C2DD72DA28 /* TopNotchTerminal.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D078BBFD64E4E461D75ECDAE /* kickback */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C9823265196A5B2330B7250 /* Build configuration list for PBXNativeTarget "kickback" */;
+			buildPhases = (
+				0B4F9F36E433EDE8480F1600 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = kickback;
+			packageProductDependencies = (
+			);
+			productName = kickback;
+			productReference = 390AE497D80802CE4596B0DD /* kickback */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7A86A957C92037ED37191B3C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					748D3E30F46A7D274E90A597 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					A174B38380A1E6DB72A70077 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					C652E1ABFF3016A49495B66A = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					C9F7EC810985D71FFF65D632 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					D078BBFD64E4E461D75ECDAE = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 6C2EAAB8067E1C6AF5CB5832 /* Build configuration list for PBXProject "TopNotchTerminal" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 18212D01F14F878E4F4CD732;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				E742206929A410B3DEFE96B4 /* XCRemoteSwiftPackageReference "SwiftTerm" */,
+			);
+			preferredProjectObjectVersion = 54;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C9F7EC810985D71FFF65D632 /* TopNotchTerminal */,
+				A174B38380A1E6DB72A70077 /* focus */,
+				C652E1ABFF3016A49495B66A /* kick */,
+				D078BBFD64E4E461D75ECDAE /* kickback */,
+				748D3E30F46A7D274E90A597 /* tnt-shell */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		135787B8E69B5A9CEF1E0ACD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E41C83EF462A85262BB1685 /* AppIcon.icns in Resources */,
+				2D16DD192D443A4FD1632521 /* Assets.xcassets in Resources */,
+				0E19EE83FB08C56132AF8F71 /* background.png in Resources */,
+				4FA6709E7F3751BC3445780A /* kick in Resources */,
+				FF220086C8E666A1334495ED /* kickback in Resources */,
+				D17D7E2554549A996E2CFB78 /* focus in Resources */,
+				54CB9724CDE1174F753E29E1 /* tnt-shell in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6F9C7297339C61424179C85C /* Copy kick helpers */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy kick helpers";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -euo pipefail\nBIN=\"$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/bin\"\nmkdir -p \"$BIN\"\ncp \"$BUILT_PRODUCTS_DIR/kick\" \"$BIN/kick\"\ncp \"$BUILT_PRODUCTS_DIR/kickback\" \"$BIN/kickback\"\ncp \"$BUILT_PRODUCTS_DIR/focus\" \"$BIN/focus\"\ncp \"$BUILT_PRODUCTS_DIR/tnt-shell\" \"$BIN/tnt-shell\"\nchmod +x \"$BIN/kick\" \"$BIN/kickback\" \"$BIN/focus\" \"$BIN/tnt-shell\"\nZSH=\"$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/zsh\"\nmkdir -p \"$ZSH\"\ncp \"$SRCROOT/Resources/zsh/zshenv\" \"$ZSH/.zshenv\"\ncp \"$SRCROOT/Resources/zsh/zprofile\" \"$ZSH/.zprofile\"\ncp \"$SRCROOT/Resources/zsh/zshrc\" \"$ZSH/.zshrc\"\ncp \"$SRCROOT/Resources/zsh/zlogin\" \"$ZSH/.zlogin\"\n";
+		};
+		CD2958146FC8596E9D7629D8 /* Install complete app icon */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Install complete app icon";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -euo pipefail\ncp \"$SRCROOT/Resources/AppIcon.icns\" \"$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/AppIcon.icns\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0B4F9F36E433EDE8480F1600 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14A76FBC70F7924C50CBA1A5 /* IPC.swift in Sources */,
+				59F6C90D5A90106AC49BCAE4 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3ACFB68B003190D225E449A5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEA963B4D6128CC3ED5521DC /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6985F53FC76EA21250743551 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92E7F8F8B0B4C4D785072366 /* AppDelegate.swift in Sources */,
+				D49D32E6B3F674934E55389D /* AppSettings.swift in Sources */,
+				BFAE688E73B3B9ED2BFFD340 /* CocoaFieldKeys.swift in Sources */,
+				1F6A39E35034270E0B8EAE08 /* CommandServer.swift in Sources */,
+				D9A22FDA12D997097AD4D9E8 /* DetachedTerminalWindow.swift in Sources */,
+				CB1D3839EEC0511F94819750 /* GlassIconButton.swift in Sources */,
+				D51AE2AB7F890D62378E76B7 /* IPC.swift in Sources */,
+				DF8D3B4E401B9148159DE659 /* KeyboardSelection.swift in Sources */,
+				8025D4390F469F3E9461F3AA /* Motion.swift in Sources */,
+				6F34C463E87C0EA4EFDAD453 /* NotchGeometry.swift in Sources */,
+				BEDE2B8CC43AB7D6689403A4 /* NotchPanelController.swift in Sources */,
+				E6BB7425813AEDA581C34176 /* OverlayToolbar.swift in Sources */,
+				F91AE97C3BCEC472AD4D59E9 /* SessionStore.swift in Sources */,
+				54AFA3D29C015A86BF2C7864 /* SettingsView.swift in Sources */,
+				F0FAE258D66351E2C3F1C8B1 /* SurfaceRouter.swift in Sources */,
+				707CDFD7A675B2B0B6AACE1C /* TabRailView.swift in Sources */,
+				16AB6EDA03F0FECB5EAD7F6F /* TerminalSession.swift in Sources */,
+				7FCA29019A4E53ABCDD4EFA1 /* TopNotchApp.swift in Sources */,
+				B49BEB956610F9BA6F7287D2 /* WorkspaceView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84A7716BF3EE5A3A8DB4262F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0E6ABD3C502A102BEACDF892 /* IPC.swift in Sources */,
+				A90C8AF7A2E5D5E81201E20B /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5AB183B24E73D3ADB802E28 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8C13226F590E5209B3FB689 /* IPC.swift in Sources */,
+				EA25FACDFDC336B955F9EDC2 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4CC9932E2206F0BDAB75B1F8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A174B38380A1E6DB72A70077 /* focus */;
+			targetProxy = 2449FF57724370854B48CF62 /* PBXContainerItemProxy */;
+		};
+		9B2B86C5C58F738F7365FBAA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 748D3E30F46A7D274E90A597 /* tnt-shell */;
+			targetProxy = BC78EBCD9C0E59FCC56C0762 /* PBXContainerItemProxy */;
+		};
+		BA4B0204531950A74C6DE822 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C652E1ABFF3016A49495B66A /* kick */;
+			targetProxy = 25AF335E09C667E14951B52E /* PBXContainerItemProxy */;
+		};
+		FC1A4203E5007383A8770764 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D078BBFD64E4E461D75ECDAE /* kickback */;
+			targetProxy = 40CD72AEF6D795704618D826 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		07F3E883DD0BE4346A56611A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.topnotch.tnt-shell";
+				PRODUCT_NAME = "tnt-shell";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		0A1C79C24210BA1982CF61B0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		251EBCE8B6D537D8B7389AE9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 2;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "TopNotch Terminal";
+				INFOPLIST_KEY_CFBundleIconFile = AppIcon;
+				INFOPLIST_KEY_CFBundleIconName = AppIcon;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHighResolutionCapable = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topnotch.terminal;
+				PRODUCT_NAME = "TopNotch Terminal";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+			};
+			name = Release;
+		};
+		3FB1E3BEABE36E723AF599DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topnotch.focus;
+				PRODUCT_NAME = focus;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		4962149692160EB76B9F0D7C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topnotch.kick;
+				PRODUCT_NAME = kick;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		5ED9B235F7724F8C88D08F38 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.topnotch.tnt-shell";
+				PRODUCT_NAME = "tnt-shell";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		676AF54FBA5B544996FA354D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topnotch.focus;
+				PRODUCT_NAME = focus;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		885401E389ECCC0B1226AF63 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topnotch.kick;
+				PRODUCT_NAME = kick;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		929210ADD056B14D7CB8BC28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		BF514CF6A13327F513A1ED14 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topnotch.kickback;
+				PRODUCT_NAME = kickback;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		C4B1B852C4517CF6270B2921 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topnotch.kickback;
+				PRODUCT_NAME = kickback;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		F62A363A6DD1D56DD5893D91 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 2;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "TopNotch Terminal";
+				INFOPLIST_KEY_CFBundleIconFile = AppIcon;
+				INFOPLIST_KEY_CFBundleIconName = AppIcon;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHighResolutionCapable = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.topnotch.terminal;
+				PRODUCT_NAME = "TopNotch Terminal";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0C9823265196A5B2330B7250 /* Build configuration list for PBXNativeTarget "kickback" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C4B1B852C4517CF6270B2921 /* Debug */,
+				BF514CF6A13327F513A1ED14 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2539E0A25ED12B93731225A8 /* Build configuration list for PBXNativeTarget "focus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				676AF54FBA5B544996FA354D /* Debug */,
+				3FB1E3BEABE36E723AF599DB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		26CEBFDA8F4465EAED178931 /* Build configuration list for PBXNativeTarget "kick" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				885401E389ECCC0B1226AF63 /* Debug */,
+				4962149692160EB76B9F0D7C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4C3E8526A8D2ED0B7EC936E0 /* Build configuration list for PBXNativeTarget "TopNotchTerminal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F62A363A6DD1D56DD5893D91 /* Debug */,
+				251EBCE8B6D537D8B7389AE9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		6C2EAAB8067E1C6AF5CB5832 /* Build configuration list for PBXProject "TopNotchTerminal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A1C79C24210BA1982CF61B0 /* Debug */,
+				929210ADD056B14D7CB8BC28 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EED3EA6D3EC56EDBAC4A74E5 /* Build configuration list for PBXNativeTarget "tnt-shell" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				07F3E883DD0BE4346A56611A /* Debug */,
+				5ED9B235F7724F8C88D08F38 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E742206929A410B3DEFE96B4 /* XCRemoteSwiftPackageReference "SwiftTerm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/migueldeicaza/SwiftTerm";
+			requirement = {
+				kind = exactVersion;
+				version = 1.18.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9B0864B5F6F58A79A976193C /* SwiftTerm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E742206929A410B3DEFE96B4 /* XCRemoteSwiftPackageReference "SwiftTerm" */;
+			productName = SwiftTerm;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 7A86A957C92037ED37191B3C /* Project object */;
+}

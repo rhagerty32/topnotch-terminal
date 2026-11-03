@@ -1,0 +1,29 @@
+[[ -f "${HOME}/.zshrc" ]] && source "${HOME}/.zshrc"
+
+# Accessory/LSUIElement apps cannot exec Foo.app/Contents/MacOS/Foo as a child
+# (Cursor dies with exit 9). Route those launches through Launch Services.
+nohup() {
+  emulate -L zsh
+  if (( $# >= 1 )) && [[ "$1" == *.app/Contents/MacOS/* ]]; then
+    local app="${1%/Contents/MacOS/*}"
+    shift
+    local -a args=()
+    local arg
+    for arg in "$@"; do
+      if [[ "$arg" == "." ]]; then
+        args+=("$PWD")
+      elif [[ "$arg" == ./* ]]; then
+        args+=("$PWD/${arg#./}")
+      else
+        args+=("$arg")
+      fi
+    done
+    if (( ${#args} )); then
+      command open -n -a "$app" --args "${args[@]}"
+    else
+      command open -n -a "$app"
+    fi
+    return $?
+  fi
+  command nohup "$@"
+}

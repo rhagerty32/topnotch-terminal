@@ -1,0 +1,157 @@
+name: TopNotchTerminal
+options:
+  bundleIdPrefix: com.topnotch
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+packages:
+  SwiftTerm:
+    url: https://github.com/migueldeicaza/SwiftTerm
+    exactVersion: 1.18.0
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_IDENTITY: "-"
+    ENABLE_HARDENED_RUNTIME: NO
+    ENABLE_APP_SANDBOX: NO
+targets:
+  TopNotchTerminal:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/App
+      - path: Sources/Notch
+      - path: Sources/Session
+      - path: Sources/Surface
+      - path: Sources/Window
+      - path: Sources/IPC
+      - path: Sources/Settings
+      - path: Resources
+        excludes:
+          - Info.plist
+    dependencies:
+      - package: SwiftTerm
+        product: SwiftTerm
+      - target: kick
+      - target: kickback
+      - target: focus
+      - target: tnt-shell
+    settings:
+      base:
+        PRODUCT_NAME: TopNotch Terminal
+        PRODUCT_BUNDLE_IDENTIFIER: com.topnotch.terminal
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "2"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_FILE: Resources/Info.plist
+        INFOPLIST_KEY_LSUIElement: YES
+        INFOPLIST_KEY_CFBundleDisplayName: TopNotch Terminal
+        INFOPLIST_KEY_NSHighResolutionCapable: YES
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.developer-tools
+        INFOPLIST_KEY_NSHumanReadableCopyright: ""
+        COMBINE_HIDPI_IMAGES: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_CFBundleIconName: AppIcon
+        INFOPLIST_KEY_CFBundleIconFile: AppIcon
+        LD_RUNPATH_SEARCH_PATHS:
+          - "$(inherited)"
+          - "@executable_path/../Frameworks"
+        SWIFT_EMIT_LOC_STRINGS: NO
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGNING_ALLOWED: YES
+        CODE_SIGNING_REQUIRED: NO
+        ENABLE_HARDENED_RUNTIME: NO
+    postBuildScripts:
+      - name: Copy kick helpers
+        basedOnDependencyAnalysis: false
+        script: |
+          set -euo pipefail
+          BIN="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/bin"
+          mkdir -p "$BIN"
+          cp "$BUILT_PRODUCTS_DIR/kick" "$BIN/kick"
+          cp "$BUILT_PRODUCTS_DIR/kickback" "$BIN/kickback"
+          cp "$BUILT_PRODUCTS_DIR/focus" "$BIN/focus"
+          cp "$BUILT_PRODUCTS_DIR/tnt-shell" "$BIN/tnt-shell"
+          chmod +x "$BIN/kick" "$BIN/kickback" "$BIN/focus" "$BIN/tnt-shell"
+          ZSH="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/zsh"
+          mkdir -p "$ZSH"
+          cp "$SRCROOT/Resources/zsh/zshenv" "$ZSH/.zshenv"
+          cp "$SRCROOT/Resources/zsh/zprofile" "$ZSH/.zprofile"
+          cp "$SRCROOT/Resources/zsh/zshrc" "$ZSH/.zshrc"
+          cp "$SRCROOT/Resources/zsh/zlogin" "$ZSH/.zlogin"
+      - name: Install complete app icon
+        basedOnDependencyAnalysis: false
+        script: |
+          set -euo pipefail
+          cp "$SRCROOT/Resources/AppIcon.icns" "$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/AppIcon.icns"
+  kick:
+    type: tool
+    platform: macOS
+    sources:
+      - path: Sources/IPC/IPC.swift
+      - path: Sources/Helpers/kick
+    settings:
+      base:
+        PRODUCT_NAME: kick
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGNING_REQUIRED: NO
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        SWIFT_VERSION: "6.0"
+  kickback:
+    type: tool
+    platform: macOS
+    sources:
+      - path: Sources/IPC/IPC.swift
+      - path: Sources/Helpers/kickback
+    settings:
+      base:
+        PRODUCT_NAME: kickback
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGNING_REQUIRED: NO
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        SWIFT_VERSION: "6.0"
+  focus:
+    type: tool
+    platform: macOS
+    sources:
+      - path: Sources/IPC/IPC.swift
+      - path: Sources/Helpers/focus
+    settings:
+      base:
+        PRODUCT_NAME: focus
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGNING_REQUIRED: NO
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        SWIFT_VERSION: "6.0"
+  tnt-shell:
+    type: tool
+    platform: macOS
+    sources:
+      - path: Sources/Helpers/tnt-shell
+    settings:
+      base:
+        PRODUCT_NAME: tnt-shell
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGNING_REQUIRED: NO
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+schemes:
+  TopNotchTerminal:
+    build:
+      targets:
+        TopNotchTerminal: all
+    run:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release

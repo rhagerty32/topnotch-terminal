@@ -1,0 +1,8 @@
+[[ -z "$HISTFILE" ]] && HISTFILE="${HOME}/.zsh_history"
+
+# TopNotch owns ZDOTDIR so we can wrap GUI launches. Keep reading the user's
+# ~/.zshenv, then pin ZDOTDIR back so later rc files still come from us.
+_tnt_zdotdir="${ZDOTDIR}"
+[[ -f "${HOME}/.zshenv" ]] && source "${HOME}/.zshenv"
+ZDOTDIR="${_tnt_zdotdir}"
+unset _tnt_zdotdir
