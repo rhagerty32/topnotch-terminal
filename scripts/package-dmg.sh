@@ -25,6 +25,7 @@ app_y=292
 
 if [[ "${SKIP_BUILD:-}" != "1" ]]; then
   xcodegen generate
+  export DEVELOPER_DIR="$(bash "$root/scripts/metal-developer-dir.sh")"
   xcodebuild \
     -scheme TopNotchTerminal \
     -configuration Release \
