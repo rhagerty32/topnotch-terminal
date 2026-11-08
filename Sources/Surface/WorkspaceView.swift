@@ -48,7 +48,9 @@ final class WorkspaceView: NSView {
         }
 
         for session in sessions {
-            if session.id == store.selectedID {
+            let live = session.id == store.selectedID
+            session.hostView.isHidden = !live
+            if live {
                 if session.hostView.superview !== stage {
                     session.hostView.removeFromSuperview()
                     stage.addSubview(session.hostView)

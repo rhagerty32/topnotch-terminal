@@ -8,6 +8,7 @@ final class SessionStore {
     var onChange: (() -> Void)?
 
     private var busyTimer: Timer?
+    private var busyMonitoring = false
 
     var selected: TerminalSession? {
         sessions.first { $0.id == selectedID } ?? sessions.first
@@ -19,11 +20,6 @@ final class SessionStore {
 
     init() {
         addTab()
-        busyTimer = Timer.scheduledTimer(withTimeInterval: 0.35, repeats: true) { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.pollBusy()
-            }
-        }
         NotificationCenter.default.addObserver(
             forName: .topNotchSessionDidDie,
             object: nil,
@@ -96,7 +92,27 @@ final class SessionStore {
         emit()
     }
 
+    /// Foreground-process checks only matter for the busy island, which is
+    /// hidden while the card is open. A slow, tolerant timer can be napped.
+    func setBusyMonitoring(_ enabled: Bool) {
+        guard enabled != busyMonitoring else { return }
+        busyMonitoring = enabled
+        busyTimer?.invalidate()
+        busyTimer = nil
+        guard enabled else { return }
+        let timer = Timer(timeInterval: 2, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.pollBusy()
+            }
+        }
+        timer.tolerance = 1
+        RunLoop.main.add(timer, forMode: .common)
+        busyTimer = timer
+        pollBusy()
+    }
+
     func terminateAll() {
+        busyMonitoring = false
         busyTimer?.invalidate()
         for session in sessions {
             session.terminate()

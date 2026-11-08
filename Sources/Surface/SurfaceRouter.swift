@@ -17,6 +17,7 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
     private var windowController: DetachedTerminalWindow?
     private var geometry = NotchGeometry.resolve()
     private var keyMonitor: Any?
+    private var presenceTimer: Timer?
     private var hoverInside = false
 
     init(store: SessionStore) {
@@ -36,7 +37,11 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
         notch.onHoverExit = { [weak self] in self?.hoverExited() }
         notch.onBusyClick = { [weak self] in self?.focusWindowedIfNeeded() }
         notch.onUserInteract = { [weak self] in
-            self?.notch.focusTerminal(self?.store.selected?.hostView)
+            self?.notch.focusTerminal(self?.store.selected?.hostView, activate: true)
+        }
+        notch.onMotionSettled = { [weak self] in
+            guard let self, self.mode == .collapsed else { return }
+            self.refreshCollapsedPresence()
         }
 
         store.onChange = { [weak self] in
@@ -68,7 +73,6 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
         }
 
         apply(mode: .collapsed, reason: "launch")
-        notch.orderFront()
     }
 
     func hoverEntered() {
@@ -148,6 +152,7 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
         if let keyMonitor {
             NSEvent.removeMonitor(keyMonitor)
         }
+        setPresenceWatch(false)
         store.terminateAll()
         windowController?.orderOut(nil)
         notch.orderOut()
@@ -160,19 +165,29 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
         geometry = NotchGeometry.resolve()
 
         switch newMode {
-        case .collapsed, .expanded, .pinned:
+        case .collapsed:
+            if previous == .windowed {
+                reparentToNotch()
+            }
+            NSApp.setActivationPolicy(.accessory)
+            windowController?.orderOut(nil)
+        case .expanded, .pinned:
             if previous == .windowed {
                 reparentToNotch()
             }
             NSApp.setActivationPolicy(.accessory)
             notch.orderFront()
             windowController?.orderOut(nil)
+            setPresenceWatch(false)
         case .windowed:
             NSApp.setActivationPolicy(.regular)
             reparentToWindow()
             NSApp.activate(ignoringOtherApps: true)
+            setPresenceWatch(false)
         }
 
+        // The busy island is the only consumer, and it is hidden while the card is open.
+        store.setBusyMonitoring(newMode == .collapsed || newMode == .windowed)
         refreshChrome(from: previous)
     }
 
@@ -196,6 +211,9 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
             notch.setChromeInteractive(false, becomeKey: false)
             notch.panel.resignKey()
             notch.chrome.toolbar.setPinned(false)
+            if previous == .expanded || previous == .pinned {
+                releaseActivation()
+            }
             if closing {
                 notch.collapse(
                     to: busy ? geometry.busyIsland() : geometry.hitTarget(),
@@ -203,12 +221,16 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
                     busy: busy,
                     animated: true
                 )
+                notch.orderFront()
+                setPresenceWatch(false)
             } else if busy {
                 notch.showBusyIsland(at: geometry.busyIsland(), animated: true)
+                notch.orderFront()
+                setPresenceWatch(false)
             } else {
                 notch.hideAll(at: geometry.hitTarget())
+                updateIdlePolicy()
             }
-            notch.orderFront()
             notch.panel.setAccessibilityElement(busy)
             notch.panel.setAccessibilityLabel(busy ? "TopNotch Terminal, job running" : nil)
         case .expanded:
@@ -251,13 +273,67 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
     }
 
     private func refreshCollapsedPresence() {
+        guard mode == .collapsed else { return }
         let busy = store.isAnyBusy
         if busy {
             notch.showBusyIsland(at: geometry.busyIsland(), animated: true)
+            notch.orderFront()
+            setPresenceWatch(false)
         } else {
             notch.hideAll(at: geometry.hitTarget())
+            updateIdlePolicy()
         }
-        notch.orderFront()
+        notch.panel.setAccessibilityElement(busy)
+        notch.panel.setAccessibilityLabel(busy ? "TopNotch Terminal, job running" : nil)
+    }
+
+    /// While nothing is running, the panel is offscreen. A tolerant timer
+    /// brings the notch hit target back only when the pointer is near it.
+    private func updateIdlePolicy() {
+        guard mode == .collapsed, !store.isAnyBusy else {
+            setPresenceWatch(false)
+            return
+        }
+        setPresenceWatch(true)
+        syncIdleWindow()
+    }
+
+    private func syncIdleWindow() {
+        guard mode == .collapsed, !store.isAnyBusy else { return }
+        let approach = geometry.hitTarget().insetBy(dx: -28, dy: -36)
+        let pointerNear = approach.contains(NSEvent.mouseLocation)
+        let visible = notch.panel.isVisible
+        if pointerNear, !visible {
+            notch.orderFront()
+            notch.wakeHoverIfNeeded()
+        } else if !pointerNear, visible {
+            notch.orderOut()
+        }
+    }
+
+    private func setPresenceWatch(_ enabled: Bool) {
+        if enabled {
+            guard presenceTimer == nil else { return }
+            let timer = Timer(timeInterval: 0.25, repeats: true) { [weak self] _ in
+                MainActor.assumeIsolated {
+                    self?.syncIdleWindow()
+                }
+            }
+            timer.tolerance = 0.15
+            RunLoop.main.add(timer, forMode: .common)
+            presenceTimer = timer
+        } else {
+            presenceTimer?.invalidate()
+            presenceTimer = nil
+        }
+    }
+
+    private func releaseActivation() {
+        guard NSApp.isActive else { return }
+        let key = NSApp.keyWindow
+        if key == nil || key === notch.panel {
+            NSApp.deactivate()
+        }
     }
 
     private func refreshToolbarOnly() {

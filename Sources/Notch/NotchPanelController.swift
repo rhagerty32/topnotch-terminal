@@ -316,10 +316,17 @@ final class NotchChromeView: NSView {
                 pathRadius: radius
             )
         } else {
-            bloom.layer?.shadowOpacity = 0
-            bloom.layer?.shadowPath = nil
-            shadowCaster.layer?.shadowOpacity = 0
-            shadowCaster.layer?.shadowPath = nil
+            clearShadow(on: bloom)
+            clearShadow(on: shadowCaster)
+        }
+        // The shadow hosts are solid shapes behind the card. Cache them once
+        // the spring settles so a caret blink does not re-blur a 56pt shadow.
+        let cache = !drivingCardFrame && (showsChrome || showsBusyIsland)
+        let scale = window?.backingScaleFactor ?? NSScreen.main?.backingScaleFactor ?? 2
+        for view in [bloom, shadowCaster] {
+            guard let layer = view.layer, layer.shouldRasterize != cache else { continue }
+            layer.shouldRasterize = cache
+            layer.rasterizationScale = scale
         }
     }
 
@@ -330,16 +337,30 @@ final class NotchChromeView: NSView {
         offset: CGSize,
         pathRadius: CGFloat
     ) {
-        view.layer?.shadowColor = NSColor.black.cgColor
-        view.layer?.shadowOpacity = opacity
-        view.layer?.shadowRadius = radius
-        view.layer?.shadowOffset = offset
-        view.layer?.shadowPath = CGPath(
-            roundedRect: view.bounds,
+        guard let layer = view.layer else { return }
+        let bounds = view.bounds
+        if layer.shadowOpacity == opacity,
+           layer.shadowRadius == radius,
+           layer.shadowOffset == offset,
+           layer.shadowPath?.boundingBox.equalTo(bounds) == true {
+            return
+        }
+        layer.shadowColor = NSColor.black.cgColor
+        layer.shadowOpacity = opacity
+        layer.shadowRadius = radius
+        layer.shadowOffset = offset
+        layer.shadowPath = CGPath(
+            roundedRect: bounds,
             cornerWidth: pathRadius,
             cornerHeight: pathRadius,
             transform: nil
         )
+    }
+
+    private func clearShadow(on view: NSView) {
+        guard let layer = view.layer, layer.shadowOpacity != 0 || layer.shadowPath != nil else { return }
+        layer.shadowOpacity = 0
+        layer.shadowPath = nil
     }
 
     private func configureShadowHost(_ view: NSView) {
@@ -374,6 +395,7 @@ final class NotchPanelController: NSObject {
     var onHoverEnter: (() -> Void)?
     var onHoverExit: (() -> Void)?
     var onBusyClick: (() -> Void)?
+    var onMotionSettled: (() -> Void)?
     var onUserInteract: (() -> Void)? {
         get { panel.onUserInteract }
         set { panel.onUserInteract = newValue }
@@ -415,30 +437,39 @@ final class NotchPanelController: NSObject {
 
     func setChromeInteractive(_ interactive: Bool, becomeKey: Bool) {
         panel.allowKey = interactive
-        var mask: NSWindow.StyleMask = [.borderless, .fullSizeContentView]
-        if !interactive {
-            mask.insert(.nonactivatingPanel)
-        }
+        let mask: NSWindow.StyleMask = [.borderless, .nonactivatingPanel, .fullSizeContentView]
         if panel.styleMask != mask {
             panel.styleMask = mask
         }
         guard becomeKey, interactive else { return }
         DispatchQueue.main.async { [weak self] in
             guard let self, self.panel.allowKey else { return }
-            NSApp.activate(ignoringOtherApps: true)
-            self.panel.makeKeyAndOrderFront(nil)
+            // Stay a nonactivating panel. Hover must not make this the front
+            // app; a click activates through focusTerminal(activate:).
+            self.panel.makeKey()
         }
     }
 
-    func focusTerminal(_ view: NSView?) {
+    func focusTerminal(_ view: NSView?, activate: Bool = false) {
         DispatchQueue.main.async { [weak self] in
             guard let self, self.panel.allowKey else { return }
-            NSApp.activate(ignoringOtherApps: true)
+            if activate {
+                NSApp.activate(ignoringOtherApps: true)
+            }
             self.panel.makeKeyAndOrderFront(nil)
             if let view {
                 self.panel.makeFirstResponder(view)
             }
         }
+    }
+
+    /// The tracking area only exists while the panel is on screen. Call this
+    /// after ordering the idle panel back in under a pointer that is already
+    /// inside the notch.
+    func wakeHoverIfNeeded() {
+        let mouse = panel.mouseLocationOutsideOfEventStream
+        guard chrome.bounds.contains(mouse) else { return }
+        scheduleEnter()
     }
 
     func expand(to frame: NSRect, notch: NSRect, animated: Bool) {
@@ -478,6 +509,7 @@ final class NotchPanelController: NSObject {
             self.panel.setFrame(frame, display: true)
             self.chrome.layoutSubtreeIfNeeded()
             self.installTracking()
+            self.onMotionSettled?()
         }
         guard animated, chrome.showsChrome else {
             finish()
