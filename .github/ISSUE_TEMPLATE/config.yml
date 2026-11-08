@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Questions and support
+    url: https://github.com/rhagerty32/topnotch-terminal/issues/new/choose
+    about: Please use the bug or feature templates when you can; blank issues are fine for quick questions.
