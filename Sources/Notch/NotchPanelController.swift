@@ -21,10 +21,10 @@ final class NotchPanel: NSPanel {
 
     private static func shouldRefocusTerminal(after hit: NSView?) -> Bool {
         guard let hit else { return true }
-        if hit is NSControl { return false }
+        if hit is NSControl || hit is ResizeGrip { return false }
         var view: NSView? = hit
         while let current = view {
-            if current is TabRailView || current is OverlayToolbar { return false }
+            if current is TabRailView || current is OverlayToolbar || current is ResizeGrip { return false }
             view = current.superview
         }
         return true
@@ -40,6 +40,10 @@ final class NotchChromeView: NSView {
     private let shadowCaster = NSView(frame: .zero)
     private let card = NSView(frame: .zero)
     private let hairline = NSView(frame: .zero)
+    private let islandLabel = IslandLabel(labelWithString: "")
+    private let resizeGrip = ResizeGrip()
+
+    var onResize: ((_ deltaDown: CGFloat, _ ended: Bool) -> Void)?
 
     var showsChrome = false {
         didSet { applyVisibility() }
@@ -60,6 +64,10 @@ final class NotchChromeView: NSView {
 
     private let spring = RectSpring()
     private var drivingCardFrame = false
+    private var washing = false
+    /// Fraction 0 is the black notch. Fraction 1 is the settled theme. `settled` recaches the shadow.
+    var onWash: ((CGFloat, Bool) -> Void)?
+    var isDriving: Bool { drivingCardFrame }
     /// Expanded workspace size. The card clips this during the spring — never
     /// shrink the holder to the live card or SwiftTerm will WINCH every frame
     /// and zsh will reprint the prompt as a staircase.
@@ -104,10 +112,25 @@ final class NotchChromeView: NSView {
 
         toolbar.isHidden = true
         workspaceHolder.isHidden = true
+        islandLabel.isHidden = true
+        islandLabel.font = NSFont.systemFont(ofSize: 11, weight: .medium)
+        islandLabel.textColor = NSColor.white.withAlphaComponent(0.86)
+        islandLabel.alignment = .center
+        islandLabel.lineBreakMode = .byTruncatingTail
+        islandLabel.maximumNumberOfLines = 1
+        islandLabel.usesSingleLineMode = true
+        resizeGrip.isHidden = true
+        resizeGrip.onDrag = { [weak self] delta, ended in
+            self?.onResize?(delta, ended)
+        }
         card.addSubview(workspaceHolder)
         card.addSubview(hairline)
+        card.addSubview(islandLabel)
+        card.addSubview(resizeGrip)
         card.addSubview(toolbar)
         toolbar.layer?.zPosition = 10
+        resizeGrip.layer?.zPosition = 11
+        islandLabel.layer?.zPosition = 8
 
         applyVisibility()
         layoutInterior()
@@ -193,6 +216,10 @@ final class NotchChromeView: NSView {
             self.workspaceHolder.alphaValue = reveal
             self.toolbar.alphaValue = reveal
             self.hairline.alphaValue = reveal
+            // Stay black while the card is still the notch, then catch the theme
+            // as the body opens. Collapse runs the same curve backward.
+            let colorT = min(1, max(0, (progress - 0.08) / 0.75))
+            self.onWash?(colorT, false)
         } completion: { [weak self] in
             guard let self else { return }
             self.drivingCardFrame = false
@@ -201,6 +228,7 @@ final class NotchChromeView: NSView {
             self.workspaceHolder.alphaValue = 1
             self.toolbar.alphaValue = expanding ? 1 : 0
             self.hairline.alphaValue = expanding ? 1 : 0
+            self.onWash?(expanding ? 1 : 0, true)
             completion?()
         }
     }
@@ -251,6 +279,50 @@ final class NotchChromeView: NSView {
         if workspaceHolder.frame != workspaceFrame {
             workspaceHolder.frame = workspaceFrame
         }
+        let gripWidth: CGFloat = 72
+        let gripHeight: CGFloat = 18
+        resizeGrip.frame = NSRect(
+            x: ((card.bounds.width - gripWidth) / 2).rounded(),
+            y: 2,
+            width: gripWidth,
+            height: gripHeight
+        )
+        let labelHeight: CGFloat = 16
+        islandLabel.frame = NSRect(
+            x: 16,
+            y: 4,
+            width: max(0, card.bounds.width - 32),
+            height: labelHeight
+        )
+    }
+
+    func applyWash(_ wash: TerminalPalette, settled: Bool) {
+        washing = !settled
+        let background = wash.background.cgColor
+        card.layer?.backgroundColor = background
+        bloom.layer?.backgroundColor = background
+        shadowCaster.layer?.backgroundColor = background
+        workspaceHolder.layer?.backgroundColor = background
+        let light = wash.isLight
+        let line = (light ? NSColor.black : NSColor.white).withAlphaComponent(light ? 0.12 : 0.14)
+        card.layer?.borderColor = line.cgColor
+        hairline.layer?.backgroundColor = line.withAlphaComponent(light ? 0.10 : 0.12).cgColor
+        islandLabel.textColor = wash.foreground.withAlphaComponent(0.86)
+        resizeGrip.ink = wash.foreground.withAlphaComponent(0.4)
+        toolbar.applyWash(wash)
+        let appearance = NSAppearance(named: light ? .aqua : .darkAqua)
+        if card.appearance?.name != appearance?.name {
+            card.appearance = appearance
+        }
+        if settled {
+            applyShape()
+        }
+    }
+
+    func setBusyCommand(_ text: String?) {
+        let trimmed = text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        islandLabel.stringValue = trimmed
+        islandLabel.isHidden = trimmed.isEmpty || !showsBusyIsland
     }
 
     private func currentCardFrame() -> NSRect {
@@ -321,7 +393,7 @@ final class NotchChromeView: NSView {
         }
         // The shadow hosts are solid shapes behind the card. Cache them once
         // the spring settles so a caret blink does not re-blur a 56pt shadow.
-        let cache = !drivingCardFrame && (showsChrome || showsBusyIsland)
+        let cache = !drivingCardFrame && !washing && (showsChrome || showsBusyIsland)
         let scale = window?.backingScaleFactor ?? NSScreen.main?.backingScaleFactor ?? 2
         for view in [bloom, shadowCaster] {
             guard let layer = view.layer, layer.shouldRasterize != cache else { continue }
@@ -378,6 +450,8 @@ final class NotchChromeView: NSView {
         toolbar.isHidden = !showsChrome
         hairline.isHidden = !showsChrome
         workspaceHolder.isHidden = !showsChrome
+        resizeGrip.isHidden = !showsChrome
+        islandLabel.isHidden = islandLabel.stringValue.isEmpty || !showsBusyIsland
         if showsChrome, !drivingCardFrame {
             toolbar.alphaValue = 1
             hairline.alphaValue = 1
@@ -477,6 +551,9 @@ final class NotchPanelController: NSObject {
         let continuing = chrome.showsChrome
         let live = chrome.cardFrame
         chrome.pinWorkspace(toCardSize: NotchChromeView.cardSize(forPanel: frame))
+        if !continuing {
+            chrome.onWash?(0, false)
+        }
         chrome.prepareDriven()
         chrome.showsBusyIsland = false
         chrome.showsChrome = true
@@ -490,6 +567,7 @@ final class NotchPanelController: NSObject {
             chrome.animateCard(from: from, to: dest, expanding: true)
         } else {
             chrome.resetMotion()
+            chrome.onWash?(1, true)
             chrome.needsLayout = true
         }
         installTracking()
@@ -509,6 +587,7 @@ final class NotchPanelController: NSObject {
             self.panel.setFrame(frame, display: true)
             self.chrome.layoutSubtreeIfNeeded()
             self.installTracking()
+            self.chrome.onWash?(0, true)
             self.onMotionSettled?()
         }
         guard animated, chrome.showsChrome else {
@@ -546,13 +625,23 @@ final class NotchPanelController: NSObject {
     }
 
     func keepExpanded(at frame: NSRect) {
+        resizeExpanded(to: frame, commitWorkspace: true)
+    }
+
+    /// `commitWorkspace` sends one WINCH. Leave it false while a drag is in
+    /// progress so the shell does not reprint on every mouse move.
+    func resizeExpanded(to frame: NSRect, commitWorkspace: Bool) {
         chrome.showsBusyIsland = false
         chrome.showsChrome = true
-        chrome.pinWorkspace(toCardSize: NotchChromeView.cardSize(forPanel: frame))
+        if commitWorkspace {
+            chrome.pinWorkspace(toCardSize: NotchChromeView.cardSize(forPanel: frame))
+        }
         if panel.frame != frame {
             panel.setFrame(frame, display: true)
             chrome.layoutSubtreeIfNeeded()
             installTracking()
+        } else if commitWorkspace {
+            chrome.layoutSubtreeIfNeeded()
         }
     }
 
@@ -601,5 +690,53 @@ final class NotchPanelController: NSObject {
         exitWork?.cancel()
         exitWork = work
         DispatchQueue.main.asyncAfter(deadline: .now() + AppSettings.shared.leaveDelay, execute: work)
+    }
+}
+
+@MainActor
+private final class IslandLabel: NSTextField {
+    override func hitTest(_ point: NSPoint) -> NSView? { nil }
+}
+
+@MainActor
+private final class ResizeGrip: NSView {
+    var onDrag: ((_ deltaDown: CGFloat, _ ended: Bool) -> Void)?
+    var ink = NSColor.white.withAlphaComponent(0.4) {
+        didSet { needsDisplay = true }
+    }
+    private var startY: CGFloat = 0
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    override func resetCursorRects() {
+        addCursorRect(bounds, cursor: .resizeUpDown)
+    }
+
+    override func draw(_ dirtyRect: NSRect) {
+        let pill = NSRect(
+            x: ((bounds.width - 36) / 2).rounded(),
+            y: ((bounds.height - 4) / 2).rounded(),
+            width: 36,
+            height: 4
+        )
+        ink.setFill()
+        NSBezierPath(roundedRect: pill, xRadius: 2, yRadius: 2).fill()
+    }
+
+    override func mouseDown(with event: NSEvent) {
+        startY = NSEvent.mouseLocation.y
+        onDrag?(0, false)
+    }
+
+    override func mouseDragged(with event: NSEvent) {
+        onDrag?(startY - NSEvent.mouseLocation.y, false)
+    }
+
+    override func mouseUp(with event: NSEvent) {
+        onDrag?(startY - NSEvent.mouseLocation.y, true)
     }
 }

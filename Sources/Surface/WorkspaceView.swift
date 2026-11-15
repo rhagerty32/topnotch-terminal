@@ -33,6 +33,13 @@ final class WorkspaceView: NSView {
         reload(focus: false)
     }
 
+    func applyWash(_ wash: TerminalPalette) {
+        let color = wash.background.cgColor
+        layer?.backgroundColor = color
+        stage.layer?.backgroundColor = color
+        rail.applyWash(wash)
+    }
+
     required init?(coder: NSCoder) { nil }
 
     func reload(focus: Bool = false) {

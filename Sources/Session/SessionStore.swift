@@ -18,6 +18,16 @@ final class SessionStore {
         sessions.contains(where: \.isBusy)
     }
 
+    /// Command shown on the busy island. Prefers the selected tab when it is the one working.
+    var busyCommand: String? {
+        let busy = sessions.filter(\.isBusy)
+        guard let session = busy.first(where: { $0.id == selectedID }) ?? busy.first else { return nil }
+        if let command = session.lastCommand?.trimmingCharacters(in: .whitespacesAndNewlines), !command.isEmpty {
+            return command
+        }
+        return "Running"
+    }
+
     init() {
         addTab()
         NotificationCenter.default.addObserver(
@@ -39,6 +49,27 @@ final class SessionStore {
             MainActor.assumeIsolated {
                 self?.emit()
             }
+        }
+        NotificationCenter.default.addObserver(
+            forName: .topNotchSettingsDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.applyTypography()
+            }
+        }
+    }
+
+    func applyTypography() {
+        for session in sessions {
+            session.applyTypography()
+        }
+    }
+
+    func applyColors(_ palette: TerminalPalette) {
+        for session in sessions {
+            session.applyColors(palette)
         }
     }
 

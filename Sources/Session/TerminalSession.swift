@@ -104,9 +104,6 @@ final class TerminalSession: NSObject, Identifiable, LocalProcessTerminalViewDel
         hostView = TrackingTerminalView(frame: NSRect(x: 0, y: 0, width: 640, height: 400))
         super.init()
         hostView.processDelegate = self
-        hostView.nativeBackgroundColor = .black
-        hostView.nativeForegroundColor = NSColor(white: 0.92, alpha: 1)
-        hostView.caretColor = NSColor(white: 0.92, alpha: 1)
         hostView.autoresizingMask = [.width, .height]
         hostView.onSubmitCommand = { [weak self] command in
             guard let self else { return }
@@ -119,11 +116,13 @@ final class TerminalSession: NSObject, Identifiable, LocalProcessTerminalViewDel
     func startIfNeeded() {
         guard !started else { return }
         started = true
+        applyAppearance()
         let settings = AppSettings.shared
         let shell = settings.resolvedShell
         let launcher = Bundle.main.resourceURL?
             .appendingPathComponent("bin/tnt-shell", isDirectory: false)
             .path
+        let directory = settings.resolvedStartupDirectory
         if let launcher, FileManager.default.isExecutableFile(atPath: launcher) {
             // Accessory apps are the "responsible process" for PTY children, so
             // GUI launches (Cursor, open -a, …) stay in the background. Spawn
@@ -131,15 +130,69 @@ final class TerminalSession: NSObject, Identifiable, LocalProcessTerminalViewDel
             hostView.startProcess(
                 executable: launcher,
                 args: [shell, "-l"],
-                environment: Self.processEnvironment()
+                environment: Self.processEnvironment(),
+                currentDirectory: directory
             )
         } else {
             hostView.startProcess(
                 executable: shell,
                 args: ["-l"],
                 environment: Self.processEnvironment(),
-                execName: (shell as NSString).lastPathComponent
+                execName: (shell as NSString).lastPathComponent,
+                currentDirectory: directory
             )
+        }
+    }
+
+    @MainActor
+    func applyAppearance() {
+        applyTypography()
+        applyColors(AppSettings.shared.palette)
+    }
+
+    @MainActor
+    func applyTypography() {
+        let settings = AppSettings.shared
+        let font = settings.resolvedFont()
+        if hostView.font.fontName != font.fontName || abs(hostView.font.pointSize - font.pointSize) > 0.1 {
+            hostView.font = font
+        }
+        hostView.getTerminal().setCursorStyle(Self.cursorStyle(kind: settings.cursorKind, blink: settings.cursorBlink))
+    }
+
+    @MainActor
+    func applyColors(_ palette: TerminalPalette) {
+        var changed = false
+        if !hostView.nativeBackgroundColor.isClose(to: palette.background) {
+            hostView.nativeBackgroundColor = palette.background
+            changed = true
+        }
+        if !hostView.nativeForegroundColor.isClose(to: palette.foreground) {
+            hostView.nativeForegroundColor = palette.foreground
+            changed = true
+        }
+        if !hostView.caretColor.isClose(to: palette.caret) {
+            hostView.caretColor = palette.caret
+            changed = true
+        }
+        let caretText = hostView.caretTextColor ?? palette.caretText
+        if !caretText.isClose(to: palette.caretText) {
+            hostView.caretTextColor = palette.caretText
+            changed = true
+        }
+        if changed {
+            hostView.needsDisplay = true
+        }
+    }
+
+    private static func cursorStyle(kind: TerminalCursorKind, blink: Bool) -> CursorStyle {
+        switch (kind, blink) {
+        case (.block, true): .blinkBlock
+        case (.block, false): .steadyBlock
+        case (.bar, true): .blinkBar
+        case (.bar, false): .steadyBar
+        case (.underline, true): .blinkUnderline
+        case (.underline, false): .steadyUnderline
         }
     }
 

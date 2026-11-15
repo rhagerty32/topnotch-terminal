@@ -2,7 +2,7 @@ import AppKit
 
 enum ChromeMetrics {
     static let expandedWidth: CGFloat = 780
-    static let expandedHeight: CGFloat = 420
+    static let expandedHeight: CGFloat = 540
     static let toolbarHeight: CGFloat = 48
     static let tabRailWidth: CGFloat = 108
     static let tabBarHeight: CGFloat = 32
@@ -48,10 +48,11 @@ struct NotchGeometry: Equatable {
         )
     }
 
-    func expandedFrame() -> NSRect {
+    func expandedFrame(cardHeight: CGFloat) -> NSRect {
         let screenFrame = screen.frame
         let cardW = min(max(ChromeMetrics.expandedWidth, screenFrame.width * 0.5), 980)
-        let cardH = ChromeMetrics.expandedHeight
+        let available = max(AppSettings.minCardHeight, screenFrame.height - menuBarHeight - 40)
+        let cardH = min(max(cardHeight, AppSettings.minCardHeight), min(AppSettings.maxCardHeight, available))
         let width = cardW + ChromeMetrics.shadowLeft + ChromeMetrics.shadowRight
         let height = cardH + ChromeMetrics.shadowBottom
         var x = notch.midX - width / 2

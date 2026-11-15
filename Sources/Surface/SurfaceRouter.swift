@@ -19,12 +19,16 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
     private var keyMonitor: Any?
     private var presenceTimer: Timer?
     private var hoverInside = false
+    private var liveCardHeight: CGFloat?
+    private var dragOriginHeight: CGFloat?
+    private var paintedWash = TerminalPalette.notch
+    private var colorMorph: Timer?
 
     init(store: SessionStore) {
         self.store = store
         workspace = WorkspaceView(store: store)
         super.init()
-        notch.chrome.pinWorkspace(toCardSize: NotchChromeView.cardSize(forPanel: geometry.expandedFrame()))
+        notch.chrome.pinWorkspace(toCardSize: NotchChromeView.cardSize(forPanel: expandedFrame()))
         workspace.autoresizingMask = [.width, .height]
         notch.chrome.workspaceHolder.addSubview(workspace)
         workspace.frame = notch.chrome.workspaceHolder.bounds
@@ -33,6 +37,16 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
         notch.chrome.toolbar.onKick = { [weak self] in self?.kickOut() }
         notch.chrome.toolbar.onNew = { [weak self] in self?.addTab() }
         notch.chrome.toolbar.onClose = { [weak self] in self?.closeTab() }
+        notch.chrome.toolbar.onSettings = { SettingsWindow.show() }
+        notch.chrome.onResize = { [weak self] delta, ended in
+            self?.resizeCard(deltaDown: delta, ended: ended)
+        }
+        notch.chrome.onWash = { [weak self] fraction, settled in
+            guard let self else { return }
+            self.colorMorph?.invalidate()
+            self.colorMorph = nil
+            self.paint(wash: AppSettings.shared.palette.washed(fraction: fraction), settled: settled)
+        }
         notch.onHoverEnter = { [weak self] in self?.hoverEntered() }
         notch.onHoverExit = { [weak self] in self?.hoverExited() }
         notch.onBusyClick = { [weak self] in self?.focusWindowedIfNeeded() }
@@ -69,6 +83,16 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
             MainActor.assumeIsolated {
                 self?.geometry = NotchGeometry.resolve()
                 self?.refreshChrome()
+            }
+        }
+
+        NotificationCenter.default.addObserver(
+            forName: .topNotchSettingsDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.settingsChanged()
             }
         }
 
@@ -194,10 +218,8 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
     private func refreshChrome(from previous: SurfaceMode? = nil) {
         geometry = NotchGeometry.resolve()
         let busy = store.isAnyBusy
-        let title = store.selected.map { session in
-            if let cwd = session.cwd { return "\(session.title) — \(cwd.replacingOccurrences(of: NSHomeDirectory(), with: "~"))" }
-            return session.title
-        } ?? "TopNotch Terminal"
+        syncBusyLabel()
+        let title = store.selected.map(pathTitle) ?? "TopNotch Terminal"
 
         let changed = previous != nil && previous != mode
         let opening = changed && (previous == .collapsed || previous == .windowed)
@@ -232,14 +254,14 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
                 updateIdlePolicy()
             }
             notch.panel.setAccessibilityElement(busy)
-            notch.panel.setAccessibilityLabel(busy ? "TopNotch Terminal, job running" : nil)
+            notch.panel.setAccessibilityLabel(busyAccessibilityLabel(busy: busy))
         case .expanded:
             notch.setChromeInteractive(true, becomeKey: true)
             notch.chrome.toolbar.setPinned(false)
             if opening {
-                notch.expand(to: geometry.expandedFrame(), notch: geometry.notch, animated: true)
+                notch.expand(to: expandedFrame(), notch: geometry.notch, animated: true)
             } else {
-                notch.keepExpanded(at: geometry.expandedFrame())
+                notch.keepExpanded(at: expandedFrame())
             }
             notch.orderFront()
             workspace.reload(focus: true)
@@ -248,9 +270,9 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
             notch.setChromeInteractive(true, becomeKey: true)
             notch.chrome.toolbar.setPinned(true)
             if opening {
-                notch.expand(to: geometry.expandedFrame(), notch: geometry.notch, animated: true)
+                notch.expand(to: expandedFrame(), notch: geometry.notch, animated: true)
             } else {
-                notch.keepExpanded(at: geometry.expandedFrame())
+                notch.keepExpanded(at: expandedFrame())
             }
             notch.orderFront()
             workspace.reload(focus: true)
@@ -265,6 +287,9 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
                 notch.orderOut()
             }
             windowController?.title = title
+            if !notch.chrome.isDriving {
+                paint(wash: AppSettings.shared.palette.washed(fraction: 1), settled: true)
+            }
             workspace.reload(focus: true)
             windowController?.makeKeyAndOrderFront(nil)
             windowController?.makeFirstResponder(store.selected?.hostView)
@@ -275,6 +300,7 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
     private func refreshCollapsedPresence() {
         guard mode == .collapsed else { return }
         let busy = store.isAnyBusy
+        syncBusyLabel()
         if busy {
             notch.showBusyIsland(at: geometry.busyIsland(), animated: true)
             notch.orderFront()
@@ -284,7 +310,7 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
             updateIdlePolicy()
         }
         notch.panel.setAccessibilityElement(busy)
-        notch.panel.setAccessibilityLabel(busy ? "TopNotch Terminal, job running" : nil)
+        notch.panel.setAccessibilityLabel(busyAccessibilityLabel(busy: busy))
     }
 
     /// While nothing is running, the panel is offscreen. A tolerant timer
@@ -337,12 +363,7 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
     }
 
     private func refreshToolbarOnly() {
-        let title = store.selected.map { session in
-            if let cwd = session.cwd {
-                return "\(session.title) — \(cwd.replacingOccurrences(of: NSHomeDirectory(), with: "~"))"
-            }
-            return session.title
-        } ?? "TopNotch Terminal"
+        let title = store.selected.map(pathTitle) ?? "TopNotch Terminal"
         let many = store.sessions.count > 1
         notch.chrome.toolbar.setTitle(title)
         notch.chrome.toolbar.setShowsNewTab(true)
@@ -358,6 +379,7 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
             let window = DetachedTerminalWindow()
             window.delegate = self
             window.onMoveToNotch = { [weak self] in self?.kickBack() }
+            window.onOpenSettings = { SettingsWindow.show() }
             windowController = window
         }
         workspace.removeFromSuperview()
@@ -386,6 +408,9 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
     }
 
     private func handleKey(_ event: NSEvent) -> Bool {
+        if let key = NSApp.keyWindow, key !== notch.panel, key !== windowController {
+            return false
+        }
         let chars = event.charactersIgnoringModifiers ?? ""
         let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
         let keyCode = event.keyCode
@@ -444,5 +469,115 @@ final class SurfaceRouter: NSObject, NSWindowDelegate {
     func windowShouldClose(_ sender: NSWindow) -> Bool {
         kickBack()
         return false
+    }
+
+    private func expandedFrame() -> NSRect {
+        geometry.expandedFrame(cardHeight: liveCardHeight ?? AppSettings.shared.cardHeight)
+    }
+
+    private func pathTitle(_ session: TerminalSession) -> String {
+        guard let cwd = session.cwd else { return session.tabTitle }
+        let home = NSHomeDirectory()
+        if cwd == home { return "~" }
+        if cwd.hasPrefix(home + "/") {
+            return "~" + cwd.dropFirst(home.count)
+        }
+        return cwd
+    }
+
+    private func syncBusyLabel() {
+        let command = AppSettings.shared.showCommandOnIsland ? store.busyCommand : nil
+        notch.chrome.setBusyCommand(command)
+    }
+
+    private func busyAccessibilityLabel(busy: Bool) -> String? {
+        guard busy else { return nil }
+        if let command = store.busyCommand {
+            return "TopNotch Terminal, \(command)"
+        }
+        return "TopNotch Terminal, job running"
+    }
+
+    private func settingsChanged() {
+        geometry = NotchGeometry.resolve()
+        switch mode {
+        case .expanded, .pinned:
+            notch.resizeExpanded(to: expandedFrame(), commitWorkspace: true)
+            refreshToolbarOnly()
+            if !notch.chrome.isDriving {
+                morphWash(to: AppSettings.shared.palette.washed(fraction: 1))
+            }
+        case .collapsed:
+            refreshCollapsedPresence()
+            if !notch.chrome.isDriving {
+                morphWash(to: .notch)
+            }
+        case .windowed:
+            syncBusyLabel()
+            if store.isAnyBusy {
+                notch.showBusyIsland(at: geometry.busyIsland(), animated: false)
+            }
+            if !notch.chrome.isDriving {
+                morphWash(to: AppSettings.shared.palette.washed(fraction: 1))
+            }
+        }
+    }
+
+    private func paint(wash: TerminalPalette, settled: Bool) {
+        paintedWash = wash
+        if mode == .windowed {
+            windowController?.applyWash(wash)
+            workspace.applyWash(wash)
+            store.applyColors(wash)
+            notch.chrome.applyWash(.notch, settled: settled)
+        } else {
+            notch.chrome.applyWash(wash, settled: settled)
+            workspace.applyWash(wash)
+            store.applyColors(wash)
+        }
+    }
+
+    /// Theme changes while the card is already open. Opening from the notch uses the spring instead.
+    private func morphWash(to target: TerminalPalette) {
+        colorMorph?.invalidate()
+        colorMorph = nil
+        let from = paintedWash
+        if AppSettings.shared.reduceMotion || from.isClose(to: target) {
+            paint(wash: target, settled: true)
+            return
+        }
+        let start = CACurrentMediaTime()
+        let timer = Timer(timeInterval: 1.0 / 60.0, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self else { return }
+                let raw = min(1, (CACurrentMediaTime() - start) / 0.45)
+                let t = raw * raw * (3 - 2 * raw)
+                self.paint(wash: from.mix(t, toward: target), settled: raw >= 1)
+                if raw >= 1 {
+                    self.colorMorph?.invalidate()
+                    self.colorMorph = nil
+                }
+            }
+        }
+        RunLoop.main.add(timer, forMode: .common)
+        colorMorph = timer
+    }
+
+    private func resizeCard(deltaDown: CGFloat, ended: Bool) {
+        guard mode == .expanded || mode == .pinned else { return }
+        let origin = dragOriginHeight ?? AppSettings.shared.cardHeight
+        if dragOriginHeight == nil {
+            dragOriginHeight = origin
+        }
+        let next = min(max(origin + deltaDown, AppSettings.minCardHeight), AppSettings.maxCardHeight)
+        liveCardHeight = next
+        notch.resizeExpanded(to: expandedFrame(), commitWorkspace: false)
+        guard ended else { return }
+        if AppSettings.shared.rememberDrag {
+            AppSettings.shared.cardHeight = next
+        }
+        liveCardHeight = nil
+        dragOriginHeight = nil
+        notch.resizeExpanded(to: expandedFrame(), commitWorkspace: true)
     }
 }

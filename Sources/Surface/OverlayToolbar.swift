@@ -6,11 +6,13 @@ final class OverlayToolbar: NSView {
     var onKick: (() -> Void)?
     var onNew: (() -> Void)?
     var onClose: (() -> Void)?
+    var onSettings: (() -> Void)?
 
     private let plusButton: NSButton
     private let closeButton: NSButton
     private let pinButton: NSButton
     private let kickButton: NSButton
+    private let settingsButton: NSButton
     private let titleField = NSTextField(labelWithString: "")
 
     override init(frame frameRect: NSRect) {
@@ -38,6 +40,12 @@ final class OverlayToolbar: NSView {
             target: nil,
             action: #selector(kickTapped)
         )
+        settingsButton = GlassIconButton.make(
+            symbol: "gearshape",
+            tooltip: "Settings (⌘,)",
+            target: nil,
+            action: #selector(settingsTapped)
+        )
         super.init(frame: frameRect)
         wantsLayer = true
         appearance = NSAppearance(named: .darkAqua)
@@ -46,6 +54,7 @@ final class OverlayToolbar: NSView {
         closeButton.target = self
         pinButton.target = self
         kickButton.target = self
+        settingsButton.target = self
 
         titleField.font = NSFont.systemFont(ofSize: 12.5, weight: .medium)
         titleField.textColor = NSColor.white.withAlphaComponent(0.78)
@@ -58,6 +67,7 @@ final class OverlayToolbar: NSView {
         addSubview(titleField)
         addSubview(pinButton)
         addSubview(kickButton)
+        addSubview(settingsButton)
         closeButton.isHidden = true
     }
 
@@ -72,6 +82,18 @@ final class OverlayToolbar: NSView {
         titleField.stringValue = text
     }
 
+    func applyWash(_ wash: TerminalPalette) {
+        let light = wash.isLight
+        let appearance = NSAppearance(named: light ? .aqua : .darkAqua)
+        if self.appearance?.name != appearance?.name {
+            self.appearance = appearance
+            for button in [plusButton, closeButton, pinButton, kickButton, settingsButton] {
+                button.appearance = appearance
+            }
+        }
+        titleField.textColor = wash.foreground.withAlphaComponent(0.82)
+    }
+
     func setShowsNewTab(_ show: Bool) {
         plusButton.isHidden = !show
         needsLayout = true
@@ -84,7 +106,7 @@ final class OverlayToolbar: NSView {
 
     override func layout() {
         super.layout()
-        let buttons = [plusButton, closeButton, pinButton, kickButton].filter { !$0.isHidden }
+        let buttons = [plusButton, closeButton, pinButton, kickButton, settingsButton].filter { !$0.isHidden }
         for button in buttons {
             button.sizeToFit()
         }
@@ -102,7 +124,8 @@ final class OverlayToolbar: NSView {
             x = closeButton.frame.maxX + 8
         }
 
-        kickButton.frame = NSRect(x: bounds.maxX - size - pad, y: y, width: size, height: size)
+        settingsButton.frame = NSRect(x: bounds.maxX - size - pad, y: y, width: size, height: size)
+        kickButton.frame = NSRect(x: settingsButton.frame.minX - size - 8, y: y, width: size, height: size)
         pinButton.frame = NSRect(x: kickButton.frame.minX - size - 8, y: y, width: size, height: size)
 
         titleField.frame = NSRect(
@@ -117,4 +140,5 @@ final class OverlayToolbar: NSView {
     @objc private func kickTapped() { onKick?() }
     @objc private func newTapped() { onNew?() }
     @objc private func closeTapped() { onClose?() }
+    @objc private func settingsTapped() { onSettings?() }
 }

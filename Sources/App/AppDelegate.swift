@@ -8,8 +8,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var ipc = CommandServer()
     private var statusItem: NSStatusItem?
     private var pendingSummon = false
+    private let summonHotkey = SummonHotkey()
+    private var openedAtLogin = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        openedAtLogin = Self.launchedAsLoginItem()
         NSAppleEventManager.shared().setEventHandler(
             self,
             andSelector: #selector(handleGetURLEvent(_:withReplyEvent:)),
@@ -25,10 +28,41 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             router.handleIPC(command)
         }
         ipc.start()
+        summonHotkey.onPress = { [weak self] in
+            self?.summonNow()
+        }
+        summonHotkey.apply(AppSettings.shared.summonHotkey)
+        NotificationCenter.default.addObserver(
+            forName: .topNotchSettingsDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.summonHotkey.apply(AppSettings.shared.summonHotkey)
+            }
+        }
         if pendingSummon {
             pendingSummon = false
             router.summon()
+        } else if !openedAtLogin {
+            presentRequestedOpen()
         }
+    }
+
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        guard AppSettings.shared.confirmQuitWhileBusy else { return .terminateNow }
+        for session in store.sessions {
+            session.refreshBusy()
+        }
+        guard store.isAnyBusy else { return .terminateNow }
+        let alert = NSAlert()
+        alert.messageText = "A command is still running"
+        alert.informativeText = "Quitting ends every session in the notch."
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "Cancel")
+        alert.addButton(withTitle: "Quit")
+        NSApp.activate(ignoringOtherApps: true)
+        return alert.runModal() == .alertSecondButtonReturn ? .terminateNow : .terminateCancel
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -37,7 +71,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        summonNow()
+        presentRequestedOpen()
         return false
     }
 
@@ -121,7 +155,36 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func kickBack() { router?.kickBack() }
 
     @objc private func openSettings() {
-        NSApp.activate(ignoringOtherApps: true)
-        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        SettingsWindow.show()
+    }
+
+    /// Finder, Spotlight, and a second click open Settings unless the user picked
+    /// another behavior. The first time, the window includes the hover hint.
+    private func presentRequestedOpen() {
+        let settings = AppSettings.shared
+        if !settings.hasOpenedSettings {
+            settings.showFirstLaunchHint = true
+            settings.hasOpenedSettings = true
+            SettingsWindow.show()
+            return
+        }
+        switch settings.openAppBehavior {
+        case .settings:
+            SettingsWindow.show()
+        case .terminal:
+            summonNow()
+        case .both:
+            SettingsWindow.show()
+            summonNow()
+        }
+    }
+
+    /// SMAppService login items set this on the opening AppleEvent. A normal
+    /// Finder launch does not, so the two cold starts can take different paths.
+    private static func launchedAsLoginItem() -> Bool {
+        guard let event = NSAppleEventManager.shared().currentAppleEvent else { return false }
+        guard event.eventID == AEEventID(kAEOpenApplication) else { return false }
+        guard let props = event.paramDescriptor(forKeyword: keyAEPropData) else { return false }
+        return props.paramDescriptor(forKeyword: keyAELaunchedAsLogInItem)?.booleanValue == true
     }
 }

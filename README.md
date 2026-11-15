@@ -13,7 +13,7 @@
 
 TopNotch Terminal is a menu-bar accessory for **macOS 14+** on MacBooks with a notch. Nothing is drawn while idle. Hover to open; the terminal takes keyboard focus immediately. Leave the notch and it closes unless you pin it.
 
-Pin when you want it to stay. Pop it out for a normal window. A running command shows a small **busy island** in the notch so you can see the job is still going.
+Pin when you want it to stay. Pop it out for a normal window. A running command shows a small **busy island** in the notch, with the command on it, so you can see the job is still going.
 
 The app is not sandboxed, so the login shell can run real tools. It does not appear in the Dock.
 
@@ -24,23 +24,25 @@ The app is not sandboxed, so the login shell can run real tools. It does not app
 - **Tabs** — ⌘T new tab; tab rail appears when you have more than one.
 - **Text-field editing** — Mac-style selection and clipboard shortcuts instead of raw terminal chords.
 - **Shell integration** — Bundled `kick`, `kickback`, and `focus` on `PATH`; your `~/.zshenv` and `~/.zshrc` still load.
-- **Settings** — Shell path, font size, hover delays, open at login (menu extra).
+- **Settings** — Opens when you open the app. Also the menu extra, ⌘,, or the gear. Shell, type, theme, notch height, hover timing, and an optional summon shortcut.
 
 ## Install
 
-There are no signed release binaries on GitHub yet. To try it today, [build from source](#build-from-source) or use a DMG you built locally (see below).
+You need **macOS 14 or later**.
 
-### Share a DMG (local build)
+1. Download `TopNotchTerminal-0.1.0.dmg` from [GitHub Releases](https://github.com/rhagerty32/topnotch-terminal/releases).
+2. Open the disk image and drag **TopNotch Terminal** up into the notch. That notch is the Applications folder.
+3. Open the app from Applications. It does not take a Dock icon. The first open shows Settings.
 
-`make dmg` produces `dist/TopNotchTerminal-0.1.0.dmg`. Friends drag **TopNotch Terminal** into Applications.
-
-This build is **ad-hoc signed**. macOS warns that it is from an unidentified developer. First launch: right-click → **Open**, or:
+This build is **ad-hoc signed**. macOS warns that it is from an unidentified developer. First launch: right-click the app in Applications → **Open**, or:
 
 ```bash
 xattr -dr com.apple.quarantine "/Applications/TopNotch Terminal.app"
 ```
 
 A warning-free install needs an Apple Developer Program membership, a Developer ID Application certificate, and notarization before packaging.
+
+Publishing a GitHub Release builds that disk image and attaches it. `make dmg` writes the same image locally at `dist/TopNotchTerminal-0.1.0.dmg`.
 
 ## Using the terminal
 
@@ -56,7 +58,7 @@ Hover to open. The terminal takes the keyboard as soon as it is open, so you can
 | Close tab | ⌘W. The last tab stays open |
 | Switch tab | ⌘1–⌘9, or Control-Tab |
 | Hide | Escape, when nothing is running |
-| Settings | Menu extra. Shell, font size, hover timing, open at login |
+| Settings | Opens when you open the app. Also the menu extra, ⌘,, or the gear. Shell, type, theme, notch height, hover timing, summon shortcut, open at login |
 | Quit | Menu extra. Every session ends |
 
 Editing follows the Mac text field, not raw terminal chords. Shift-arrows grow a selection. ⌘A selects the command line. ⌘C, ⌘X, and ⌘V copy, cut, and paste. Left and right arrow move to that side of the highlight and leave the text in place. ⌘←/⌘→ and ⌥←/⌥→ jump and delete by line or word the way a text field does.

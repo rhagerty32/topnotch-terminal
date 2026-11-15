@@ -8,6 +8,7 @@ final class TabRailView: NSView {
     var onRename: ((UUID, String) -> Void)?
 
     private var items: [SessionTabItem] = []
+    private var ink = NSColor(white: 0.92, alpha: 1)
     private var selectedID: UUID?
     private var editingID: UUID?
     private let newTab = NewTabItem()
@@ -119,8 +120,20 @@ final class TabRailView: NSView {
                 item.setSelected(session.id == selected)
             }
             item.toolTip = session.cwd ?? session.tabTitle
+            item.setInk(ink)
         }
+        newTab.setInk(ink)
         needsLayout = true
+    }
+
+    func applyWash(_ wash: TerminalPalette) {
+        ink = wash.foreground
+        let light = wash.isLight
+        appearance = NSAppearance(named: light ? .aqua : .darkAqua)
+        for item in items {
+            item.setInk(ink)
+        }
+        newTab.setInk(ink)
     }
 
     override func layout() {
@@ -183,6 +196,7 @@ private final class SessionTabItem: NSView {
 
     private let label = TabTitleField()
     private let closeButton = TabCloseButton()
+    private var ink = NSColor(white: 0.92, alpha: 1)
     private var selected = false
     private var hovered = false
     private var titleBeforeEdit: String?
@@ -238,6 +252,12 @@ private final class SessionTabItem: NSView {
         guard hovered != on else { return }
         hovered = on
         refreshCloseVisibility()
+        paint()
+    }
+
+    func setInk(_ color: NSColor) {
+        ink = color
+        closeButton.contentTintColor = color.withAlphaComponent(0.72)
         paint()
     }
 
@@ -324,7 +344,7 @@ private final class SessionTabItem: NSView {
         guard let textView = label.currentEditor() as? NSTextView else { return }
         textView.drawsBackground = false
         textView.backgroundColor = .clear
-        textView.insertionPointColor = NSColor.white.withAlphaComponent(0.94)
+        textView.insertionPointColor = ink.withAlphaComponent(0.94)
         textView.font = label.font
         textView.alignment = .center
         textView.textContainerInset = .zero
@@ -333,17 +353,17 @@ private final class SessionTabItem: NSView {
 
     private func paint() {
         if selected {
-            layer?.backgroundColor = NSColor.white.withAlphaComponent(0.16).cgColor
-            layer?.borderColor = NSColor.white.withAlphaComponent(0.22).cgColor
-            label.textColor = NSColor.white.withAlphaComponent(0.94)
+            layer?.backgroundColor = ink.withAlphaComponent(0.16).cgColor
+            layer?.borderColor = ink.withAlphaComponent(0.22).cgColor
+            label.textColor = ink.withAlphaComponent(0.94)
         } else if hovered {
-            layer?.backgroundColor = NSColor.white.withAlphaComponent(0.10).cgColor
-            layer?.borderColor = NSColor.white.withAlphaComponent(0.12).cgColor
-            label.textColor = NSColor.white.withAlphaComponent(0.78)
+            layer?.backgroundColor = ink.withAlphaComponent(0.10).cgColor
+            layer?.borderColor = ink.withAlphaComponent(0.12).cgColor
+            label.textColor = ink.withAlphaComponent(0.78)
         } else {
-            layer?.backgroundColor = NSColor.white.withAlphaComponent(0.06).cgColor
-            layer?.borderColor = NSColor.white.withAlphaComponent(0.08).cgColor
-            label.textColor = NSColor.white.withAlphaComponent(0.62)
+            layer?.backgroundColor = ink.withAlphaComponent(0.06).cgColor
+            layer?.borderColor = ink.withAlphaComponent(0.08).cgColor
+            label.textColor = ink.withAlphaComponent(0.62)
         }
     }
 }
@@ -372,6 +392,7 @@ private final class NewTabItem: NSView {
     var onNew: (() -> Void)?
 
     private let icon = NSImageView()
+    private var ink = NSColor(white: 0.92, alpha: 1)
     private var hovered = false
 
     override init(frame frameRect: NSRect) {
@@ -396,6 +417,12 @@ private final class NewTabItem: NSView {
         paint()
     }
 
+    func setInk(_ color: NSColor) {
+        ink = color
+        icon.contentTintColor = color.withAlphaComponent(0.78)
+        paint()
+    }
+
     override func layout() {
         super.layout()
         let size: CGFloat = 12
@@ -416,7 +443,7 @@ private final class NewTabItem: NSView {
     }
 
     private func paint() {
-        layer?.backgroundColor = NSColor.white.withAlphaComponent(hovered ? 0.12 : 0.06).cgColor
-        layer?.borderColor = NSColor.white.withAlphaComponent(hovered ? 0.16 : 0.08).cgColor
+        layer?.backgroundColor = ink.withAlphaComponent(hovered ? 0.12 : 0.06).cgColor
+        layer?.borderColor = ink.withAlphaComponent(hovered ? 0.16 : 0.08).cgColor
     }
 }

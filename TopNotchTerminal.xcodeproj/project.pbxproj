@@ -28,6 +28,7 @@
 		BEDE2B8CC43AB7D6689403A4 /* NotchPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BCE3FAEA08C889F03C1C7 /* NotchPanelController.swift */; };
 		BFAE688E73B3B9ED2BFFD340 /* CocoaFieldKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 111E179B203A5E0622074591 /* CocoaFieldKeys.swift */; };
 		CB1D3839EEC0511F94819750 /* GlassIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A63B5D61F16CF2D1EC6578 /* GlassIconButton.swift */; };
+		CDA0FFB1985E7E728129296F /* SummonHotkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE70E30C9CBE5256E5789A4E /* SummonHotkey.swift */; };
 		D0E3E5481E5D29257FF9926F /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = 9B0864B5F6F58A79A976193C /* SwiftTerm */; };
 		D17D7E2554549A996E2CFB78 /* focus in Resources */ = {isa = PBXBuildFile; fileRef = 1C784B404D663EDD396B0EBD /* focus */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D49D32E6B3F674934E55389D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCE39E3DEF55701232296D0 /* AppSettings.swift */; };
@@ -109,6 +110,7 @@
 		DA3A58FB2298FFC6F347F777 /* KeyboardSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardSelection.swift; sourceTree = "<group>"; };
 		EA1559BA98F5BFFA226E87B0 /* SurfaceRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurfaceRouter.swift; sourceTree = "<group>"; };
 		F9DB6DB3B28CDF3917F579FD /* TabRailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabRailView.swift; sourceTree = "<group>"; };
+		FE70E30C9CBE5256E5789A4E /* SummonHotkey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummonHotkey.swift; sourceTree = "<group>"; };
 		FF994ACA76D8D3B744F67FF8 /* CommandServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandServer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -173,6 +175,7 @@
 			children = (
 				19E752070E97AB9F53D0492B /* AppDelegate.swift */,
 				1CCE39E3DEF55701232296D0 /* AppSettings.swift */,
+				FE70E30C9CBE5256E5789A4E /* SummonHotkey.swift */,
 				9762146F9CDF78E88C588BA6 /* TopNotchApp.swift */,
 			);
 			path = App;
@@ -549,6 +552,7 @@
 				E6BB7425813AEDA581C34176 /* OverlayToolbar.swift in Sources */,
 				F91AE97C3BCEC472AD4D59E9 /* SessionStore.swift in Sources */,
 				54AFA3D29C015A86BF2C7864 /* SettingsView.swift in Sources */,
+				CDA0FFB1985E7E728129296F /* SummonHotkey.swift in Sources */,
 				F0FAE258D66351E2C3F1C8B1 /* SurfaceRouter.swift in Sources */,
 				707CDFD7A675B2B0B6AACE1C /* TabRailView.swift in Sources */,
 				16AB6EDA03F0FECB5EAD7F6F /* TerminalSession.swift in Sources */,

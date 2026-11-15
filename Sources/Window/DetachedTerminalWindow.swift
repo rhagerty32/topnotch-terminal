@@ -3,6 +3,7 @@ import AppKit
 @MainActor
 final class DetachedTerminalWindow: NSWindow {
     var onMoveToNotch: (() -> Void)?
+    var onOpenSettings: (() -> Void)?
 
     private let host = NSView(frame: .zero)
 
@@ -28,6 +29,13 @@ final class DetachedTerminalWindow: NSWindow {
         toolbarStyle = .unified
     }
 
+    func applyWash(_ wash: TerminalPalette) {
+        let color = wash.background
+        backgroundColor = color
+        host.layer?.backgroundColor = color.cgColor
+        appearance = NSAppearance(named: wash.isLight ? .aqua : .darkAqua)
+    }
+
     func embed(_ workspace: WorkspaceView) {
         workspace.removeFromSuperview()
         workspace.frame = host.bounds
@@ -40,6 +48,7 @@ final class DetachedTerminalWindow: NSWindow {
         toolbar.displayMode = .iconOnly
         toolbar.delegate = ToolbarShim.shared
         ToolbarShim.shared.onMove = { [weak self] in self?.onMoveToNotch?() }
+        ToolbarShim.shared.onSettings = { [weak self] in self?.onOpenSettings?() }
         return toolbar
     }
 }
@@ -48,13 +57,14 @@ final class DetachedTerminalWindow: NSWindow {
 private final class ToolbarShim: NSObject, NSToolbarDelegate {
     static let shared = ToolbarShim()
     var onMove: (() -> Void)?
+    var onSettings: (() -> Void)?
 
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        [.flexibleSpace, .moveToNotch]
+        [.flexibleSpace, .openSettings, .moveToNotch]
     }
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        [.flexibleSpace, .moveToNotch]
+        [.flexibleSpace, .openSettings, .moveToNotch]
     }
 
     func toolbar(
@@ -62,6 +72,16 @@ private final class ToolbarShim: NSObject, NSToolbarDelegate {
         itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
         willBeInsertedIntoToolbar flag: Bool
     ) -> NSToolbarItem? {
+        if itemIdentifier == .openSettings {
+            let item = NSToolbarItem(itemIdentifier: itemIdentifier)
+            item.label = "Settings"
+            item.paletteLabel = "Settings"
+            item.toolTip = "Settings"
+            item.image = NSImage(systemSymbolName: "gearshape", accessibilityDescription: "Settings")
+            item.target = self
+            item.action = #selector(openSettings)
+            return item
+        }
         guard itemIdentifier == .moveToNotch else { return nil }
         let item = NSToolbarItem(itemIdentifier: itemIdentifier)
         item.label = "Move to Notch"
@@ -77,8 +97,10 @@ private final class ToolbarShim: NSObject, NSToolbarDelegate {
     }
 
     @objc private func move() { onMove?() }
+    @objc private func openSettings() { onSettings?() }
 }
 
 extension NSToolbarItem.Identifier {
     static let moveToNotch = NSToolbarItem.Identifier("MoveToNotch")
+    static let openSettings = NSToolbarItem.Identifier("OpenSettings")
 }
