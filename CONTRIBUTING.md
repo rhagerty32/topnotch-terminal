@@ -47,7 +47,9 @@ There is no automated test target today. Please manually exercise hover open/clo
 4. Open a pull request against `main` and fill out the PR template.
 5. Ensure **CI** passes (Debug build on macOS).
 
-Maintainers may suggest edits or merge when the change looks good and the build is green.
+### How changes land
+
+Anyone can open a pull request against `main`. [@rhagerty32](https://github.com/rhagerty32) reviews it and is the only person who merges to `main`, once CI is green.
 
 ## Code style
 
